@@ -1,0 +1,31 @@
+@(accounts: List[models.Account])
+
+@layout("Lista klientów"){
+
+  <h2>Lista klientów</h2>
+  
+  <table class="table table-striped"> 
+  <tr>
+    <th>Id</th>
+    <th>Imię</th>
+    <th>Nazwisko</th>
+    <th>Status</th>
+    <th>Akcje</th>
+  </tr>
+	  @accounts.map { account =>
+      <tr>
+        <td>@account.id</td>
+        <td>@account.firstName</td>
+        <td>@account.lastName</td>
+        <td>
+          @account.statusName
+        </td>
+        <td>
+          <a class="btn" href="@controllers.accounts.routes.AccountController.account(account.id)">Edytuj</a>
+        </td>
+      </tr>
+	  }
+  </table>
+  
+
+}

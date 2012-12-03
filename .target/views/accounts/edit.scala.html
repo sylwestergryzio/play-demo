@@ -1,0 +1,56 @@
+@(accountForm: Form[models.Account])
+
+@input(field: Field, label: String="", readOnly: Boolean = false, fieldType: Symbol = 'text) = {
+  <div class="control-group @if(accountForm(field.id).hasErrors){error}">
+    <label class="control-label" for="@field.id">@label</label>
+    <div class="controls">
+      <input type="@fieldType.name" name="@field.id" id="@field.id" value="@field.value" 
+             @if(readOnly){ readonly="readonly" } >
+      @if(field.hasErrors){
+        <span class="help-inline"> @Messages(field.error.head.message) </span>
+      }
+    </div>
+  </div>
+}
+
+@select(field: Field, label: String="", options: Seq[(String, String)]) = {
+  <div class="control-group @if(accountForm(field.id).hasErrors){error}">
+    <label class="control-label" for="@field.id">@label</label>
+    <div class="controls">
+      <select name="@field.id" id="@field.id">
+        @options.map { option =>
+          <option value="@option._1" @if(field.value.get.equals(option._1)){selected=""}>@option._2</option>
+        }
+      </select>
+      @if(field.hasErrors){
+        <span class="help-inline"> @Messages(field.error.head.message) </span>
+      }
+    </div>
+  </div>
+}
+
+
+@layout("Edytuj klienta"){
+
+  <h3>
+	  @accountForm("firstName").value.getOrElse("") @accountForm("lastName").value.getOrElse("")
+	
+	  @if(accountForm("status").value.get.equals("0")){
+	    (Złoty klient)
+	  }
+  </h3>
+
+  <form method="post" action = "@controllers.accounts.routes.AccountController.updateAccount()" class="form-horizontal">
+    @input(accountForm("id"), "Id", true)
+    @input(accountForm("firstName"), "Imię")
+    @input(accountForm("lastName"), "Nazwisko")
+    @select(accountForm("status"), "Status", Seq(("0", "Złoty"), ("1", "Srebrny")))
+     <div class="control-group">
+      <div class="controls">
+        <input type="submit" class="btn btn-primary" value="Zapisz"/>
+        <a href="@controllers.routes.Application.index" class="btn">Powrót</a>
+      </div>
+    </div>
+  </form>
+
+}
