@@ -14,7 +14,7 @@ case class Account(id: Int,
     status match {
       case 0 => "Złoty"
       case 1 => "Srebrny"
-      case 2 => "Bronzowy"
+      case 2 => "Brazowy"
     }
   
 }
@@ -49,5 +49,15 @@ object Account {
     		  where id = {id}
           """).on('fn -> account.firstName, 'ln -> account.lastName, 's -> account.status, 'id -> account.id).executeUpdate()
   }
+
+  def create(account: Account) = DB.withConnection {
+    implicit c =>
+      val res = SQL(
+        """
+    		  insert into accounts(first_name, last_name, status) values({fn}, {ln}, {s})
+        """).on('fn -> account.firstName, 'ln -> account.lastName, 's -> account.status).executeUpdate()
+  }
+
+  // http://www.jamesward.com/2012/02/21/play-framework-2-with-scala-anorm-json-coffeescript-jquery-heroku
 }
 				  

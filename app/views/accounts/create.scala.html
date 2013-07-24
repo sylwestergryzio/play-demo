@@ -1,0 +1,64 @@
+@(accountForm: Form[models.Account])
+
+@input(field: Field, label: String="", readOnly: Boolean = false, fieldType: Symbol = 'text) = {
+<div class="control-group @if(accountForm(field.id).hasErrors){error}">
+    <label class="control-label" for="@field.id">@label</label>
+    <div class="controls">
+        <input type="@fieldType.name" name="@field.id" id="@field.id" value="@field.value"
+        @if(readOnly){ readonly="readonly" } >
+        @if(field.hasErrors){
+        <span class="help-inline"> @Messages(field.error.head.message) </span>
+        }
+    </div>
+</div>
+}
+
+@select(field: Field, label: String="", options: Seq[(String, String)]) = {
+<div class="control-group @if(accountForm(field.id).hasErrors){error}">
+    <label class="control-label" for="@field.id">@label</label>
+    <div class="controls">
+        <select name="@field.id" id="@field.id">
+            @options.map { option =>
+            <option value="@option._1" @if(field.value.get.equals(option._1)){selected=""}>@option._2</option>
+            }
+        </select>
+        @if(field.hasErrors){
+        <span class="help-inline"> @Messages(field.error.head.message) </span>
+        }
+    </div>
+</div>
+}
+
+
+@layout("Dodaj klienta"){
+
+<h3>
+    @accountForm("firstName").value.getOrElse("") @accountForm("lastName").value.getOrElse("")
+</h3>
+
+@if(accountForm.hasErrors) {
+<div class="alert alert-error">
+    <a class="close" data-dismiss="alert">x</a>
+    @if(accountForm.errors.size > 0) {
+        @for(err <- accountForm.errors) {
+            <p>@err.key => @err.message</p>
+        }
+    } else {
+        No error returned.
+    }
+</div>
+}
+
+<form method="post" action = "@controllers.accounts.routes.AccountController.createAccount()" class="form-horizontal">
+    @input(accountForm("firstName"), "Imię")
+    @input(accountForm("lastName"), "Nazwisko")
+    @select(accountForm("status"), "Status", Seq(("0", "Złoty"), ("1", "Srebrny"), ("2", "Brazowy")))
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit" class="btn btn-primary" value="Dodaj"/>
+            <a href="@controllers.routes.Application.index" class="btn">Powrót</a>
+        </div>
+    </div>
+</form>
+
+}

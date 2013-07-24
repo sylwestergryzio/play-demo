@@ -13,15 +13,15 @@ class AccountControllerTest
 
   test("Should return a list of accounts") {
     running(FakeApplication()) {
-      val result = routeAndCall(FakeRequest(GET, "/accounts"))
+      val result = route(FakeRequest(GET, "/accounts"))
       result should not be (None)
       status(result.get) should be(OK)
       contentAsString(result.get) should include("John").and(include("Doe"))
     }
   }
-  
+
   test("Should get a list of all accounts from remote server") {
-    val browser = TestBrowser.default
+    val browser = TestBrowser.default(Some("http://localhost:9000/"))
     browser.goTo("http://localhost:9000/accounts")
     browser.await()
     val source = browser.pageSource

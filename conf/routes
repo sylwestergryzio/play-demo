@@ -9,5 +9,11 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /                           controllers.Application.index
 
 GET     /accounts                   controllers.accounts.AccountController.all
+GET     /account/new                controllers.accounts.AccountController.newAccount()
 GET     /account/:id                controllers.accounts.AccountController.account(id:Int)
+GET     /account/validate/:id       controllers.accounts.AccountController.validateAccount(id:Int)
+
+GET     /leases/account/:accountId  controllers.leases.LeaseController.getByAccount(accountId: Int)
+
 POST    /account/update             controllers.accounts.AccountController.updateAccount
+POST    /account/create             controllers.accounts.AccountController.createAccount
